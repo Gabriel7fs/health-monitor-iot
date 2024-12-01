@@ -1,37 +1,28 @@
-name: Build and Test ESP32 Code
+name: Build and Upload ESP32 Firmware
 
 on:
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - main
 
 jobs:
-  build:
+  build-upload:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout do código
-      - name: Checkout repository
-        uses: actions/checkout@v4
+    - name: Checkout Code
+      uses: actions/checkout@v3
 
-      # Instalação da ferramenta Arduino CLI
-      - name: Install Arduino CLI
-        run: |
-          curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | sh
-          echo "$HOME/bin" >> $GITHUB_PATH
-          arduino-cli core update-index
-          arduino-cli core install esp32:esp32
+    - name: Setup Arduino CLI
+      run: |
+        curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | sh
+        arduino-cli config init
+        arduino-cli core update-index
+        arduino-cli core install esp32:esp32
 
-      # Compilação do código para ESP32
-      - name: Compile Sketch
-        run: |
-          arduino-cli compile --fqbn esp32:esp32:esp32 your_sketch.ino
+    - name: Compile Sketch
+      run: arduino-cli compile --fqbn esp32:esp32:esp32 ./path-to-your-sketch.ino
 
-      # Verificação de formato do código
-      - name: Format Check
-        run: |
-          arduino-cli lib update-index
-          arduino-cli lib install "WiFi" "BluetoothSerial" "MAX30100_PulseOximeter"
+    - name: Upload Firmware
+      if: github.event_name == 'push'
+      run: arduino-cli upload --fqbn esp32:esp32:esp32 --port /dev/ttyUSB0 ./path-to-your-sketch.ino
