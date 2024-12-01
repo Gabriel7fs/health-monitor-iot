@@ -1,0 +1,32 @@
+name: Build and Test ESP32 Code
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Arduino CLI
+        run: |
+          curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | sh
+          arduino-cli core update-index
+          arduino-cli core install esp32:esp32
+
+      - name: Compile Sketch
+        run: |
+          arduino-cli compile --fqbn esp32:esp32:esp32 your_sketch.ino
+
+      - name: Format Check
+        run: |
+          arduino-cli lib update-index
+          arduino-cli lib install "ESP32" "BluetoothSerial" "MAX30100_PulseOximeter"
