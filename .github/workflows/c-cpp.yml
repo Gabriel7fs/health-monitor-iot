@@ -13,20 +13,25 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # Checkout do código
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      # Instalação da ferramenta Arduino CLI
       - name: Install Arduino CLI
         run: |
           curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | sh
+          echo "$HOME/bin" >> $GITHUB_PATH
           arduino-cli core update-index
           arduino-cli core install esp32:esp32
 
+      # Compilação do código para ESP32
       - name: Compile Sketch
         run: |
           arduino-cli compile --fqbn esp32:esp32:esp32 your_sketch.ino
 
+      # Verificação de formato do código
       - name: Format Check
         run: |
           arduino-cli lib update-index
-          arduino-cli lib install "ESP32" "BluetoothSerial" "MAX30100_PulseOximeter"
+          arduino-cli lib install "WiFi" "BluetoothSerial" "MAX30100_PulseOximeter"
