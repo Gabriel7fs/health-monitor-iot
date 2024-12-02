@@ -15,23 +15,4 @@ jobs:
 
     - name: Install Arduino CLI
       run: |
-        curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | sh
-        echo "Adding Arduino CLI to PATH"
-        echo "/home/runner/work/health-monitor-iot/health-monitor-iot/bin" >> $GITHUB_PATH
-
-    - name: Install ESP32 Core
-      run: |
-        arduino-cli core update-index
-        arduino-cli core install esp32:esp32
-
-    - name: Install Dependencies
-      run: |
-        arduino-cli lib install "WebSockets"
-        arduino-cli lib install "MAX30100lib" # Substitua pelo nome correto da biblioteca, se necessário
-
-    - name: Compile Sketch
-      run: arduino-cli compile --fqbn esp32:esp32:esp32:PartitionScheme=minimal_spiffs ./esp32_HealthMonitor/esp32_HealthMonitor.ino
-
-    - name: Upload Firmware
-      if: github.event_name == 'push'
-      run: arduino-cli upload --fqbn esp32:esp32:esp32:PartitionScheme=minimal_spiffs --port /dev/ttyUSB0 ./esp32_HealthMonitor/esp32_HealthMonitor.ino
+        curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh |
