@@ -17,8 +17,7 @@ jobs:
       run: |
         curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | sh
         echo "Adding Arduino CLI to PATH"
-        echo "$(pwd)/bin" >> $GITHUB_PATH
-        arduino-cli config init
+        echo "/home/runner/work/health-monitor-iot/health-monitor-iot/bin" >> $GITHUB_PATH
 
     - name: Install ESP32 Core
       run: |
