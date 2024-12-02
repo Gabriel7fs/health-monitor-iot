@@ -10,20 +10,24 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repo
+    - name: Checkout Code
       uses: actions/checkout@v4
-      with:
-        submodules: 'recursive'
-    
-    - name: Initialize submodules
-      run: git submodule update --init --recursive
 
-    - name: Espressif IoT Development Framework (ESP-IDF)
-      uses: espressif/esp-idf-ci-action@v1.2.0
-      with:
-        esp_idf_version: v4.4
-        target: esp32s2
-        path: 'esp32-s2-hmi-devkit-1/examples/smart-panel'
-      env:
-        IDF_LOG_LEVEL: VERBOSE
+    - name: Install Arduino CLI
+      run: |
+        curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | sh
+        echo "Adding Arduino CLI to PATH"
+        echo "$(pwd)/bin" >> $GITHUB_PATH
+        arduino-cli config init
 
+    - name: Install ESP32 Core
+      run: |
+        arduino-cli core update-index
+        arduino-cli core install esp32:esp32
+
+    - name: Compile Sketch
+      run: arduino-cli compile --fqbn esp32:esp32:esp32 ./path-to-your-sketch.ino
+
+    - name: Upload Firmware
+      if: github.event_name == 'push'
+      run: arduino-cli upload --fqbn esp32:esp32:esp32 --port /dev/ttyUSB0 ./path-to-your-sketch.ino
