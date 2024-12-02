@@ -30,7 +30,7 @@ jobs:
         arduino-cli lib install "MAX30100lib" # Substitua pelo nome correto da biblioteca, se necessário
 
     - name: Compile Sketch
-      run: arduino-cli compile --fqbn esp32:esp32:esp32 ./esp32_HealthMonitor/esp32_HealthMonitor.ino
+      run: arduino-cli compile --fqbn esp32:esp32:esp32:partition=huge_app ./esp32_HealthMonitor/esp32_HealthMonitor.ino
 
     - name: Upload Firmware
       if: github.event_name == 'push'
