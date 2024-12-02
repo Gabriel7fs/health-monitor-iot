@@ -1,22 +1,51 @@
-name: Build and Upload ESP32 Firmware
-
+name: Dynatrace UFO CI
 on:
   push:
-    branches:
-      - main
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+    
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
 
 jobs:
   build:
+
     runs-on: ubuntu-latest
 
     steps:
     - name: Checkout repo
-      uses: actions/checkout@v4
+      uses: actions/checkout@v2
       with:
         submodules: 'recursive'
+    
+    - name: Output results
+      run: |
+        ls -l
+
+    - name: Data to header file conversion
+      run: |
+        python data2h.py data/index.html main/indexhtml.h
+        python data2h.py data/material-design-icons.ttf main/fontttf.h
+        python data2h.py data/material-design-icons.woff main/fontwoff.h
+        python data2h.py data/material-design-icons.svg main/fontsvg.h
+        python data2h.py data/material-design-icons.eot main/fonteot.h
+        python data2h.py data/cert.pem main/certpem.h
+        python data2h.py data/key.pem main/keypem.h
+
     - name: esp-idf build
-      uses: espressif/esp-idf-ci-action@v1
+      uses: espressif/esp-idf-ci-action@main
       with:
-        esp_idf_version: v4.4
-        target: esp32s2
-        path: 'esp32-s2-hmi-devkit-1/examples/smart-panel'
+        esp_idf_version: v3.3.1
+        path: '.'
+        
+    - name: List build artefacts
+      run: |
+        ls -l build/
+    
+    - name: Store Artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: ufo-esp32.bin 
+        path: |
+          build/ufo-esp32.bin
