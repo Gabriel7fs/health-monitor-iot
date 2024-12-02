@@ -1,4 +1,4 @@
-name: Build and Upload ESP32 Firmware
+name: Build ESP32 Firmware
 
 on:
   push:
@@ -24,9 +24,10 @@ jobs:
         arduino-cli core update-index
         arduino-cli core install esp32:esp32
 
-    - name: Compile Sketch
-      run: arduino-cli compile --fqbn esp32:esp32:esp32 ./esp32_HealthMonitor/esp32_HealthMonitor.ino
+    - name: Install Dependencies
+      run: |
+        arduino-cli lib install "WebSockets"
+        arduino-cli lib install "MAX30100lib" # Substitua pelo nome correto da biblioteca, se necessário
 
-    - name: Upload Firmware
-      if: github.event_name == 'push'
-      run: arduino-cli upload --fqbn esp32:esp32:esp32 --port /dev/ttyUSB0 ./esp32_HealthMonitor/esp32_HealthMonitor.ino
+    - name: Compile Sketch
+      run: arduino-cli compile --fqbn esp32:esp32:esp32:PartitionScheme=no_ota ./esp32_HealthMonitor/esp32_HealthMonitor.ino
