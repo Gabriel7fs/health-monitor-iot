@@ -25,8 +25,8 @@ jobs:
         arduino-cli core install esp32:esp32
 
     - name: Compile Sketch
-      run: arduino-cli compile --fqbn esp32:esp32:esp32 ./path-to-your-sketch.ino
+      run: arduino-cli compile --fqbn esp32:esp32:esp32 ./esp32_HealthMonitor/esp32_HealthMonitor.ino
 
     - name: Upload Firmware
       if: github.event_name == 'push'
-      run: arduino-cli upload --fqbn esp32:esp32:esp32 --port /dev/ttyUSB0 ./path-to-your-sketch.ino
+      run: arduino-cli upload --fqbn esp32:esp32:esp32 --port /dev/ttyUSB0 ./esp32_HealthMonitor/esp32_HealthMonitor.ino
