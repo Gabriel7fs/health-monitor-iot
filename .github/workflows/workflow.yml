@@ -14,16 +14,6 @@ jobs:
       uses: actions/checkout@v4
       with:
         submodules: 'recursive'
-
-    - name: Data to header file conversion
-      run: |
-        python data2h.py data/index.html main/indexhtml.h
-        python data2h.py data/material-design-icons.ttf main/fontttf.h
-        python data2h.py data/material-design-icons.woff main/fontwoff.h
-        python data2h.py data/material-design-icons.svg main/fontsvg.h
-        python data2h.py data/material-design-icons.eot main/fonteot.h
-        python data2h.py data/cert.pem main/certpem.h
-        python data2h.py data/key.pem main/keypem.h
     
     - name: Initialize submodules
       run: git submodule update --init --recursive
