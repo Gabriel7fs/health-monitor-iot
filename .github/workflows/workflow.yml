@@ -24,3 +24,6 @@ jobs:
         esp_idf_version: v4.4
         target: esp32s2
         path: 'esp32-s2-hmi-devkit-1/examples/smart-panel'
+      env:
+        IDF_LOG_LEVEL: VERBOSE
+
