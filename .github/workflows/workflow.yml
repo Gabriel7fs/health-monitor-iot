@@ -27,7 +27,7 @@ jobs:
     - name: Install Dependencies
       run: |
         arduino-cli lib install "WebSockets"
-        arduino-cli lib install "MAX30100lib" # Substitua pelo nome correto da biblioteca, se necessário
+        arduino-cli lib install "MAX30100lib"
 
     - name: Compile Sketch
       run: arduino-cli compile --fqbn esp32:esp32:esp32:PartitionScheme=no_ota ./esp32_HealthMonitor/esp32_HealthMonitor.ino
