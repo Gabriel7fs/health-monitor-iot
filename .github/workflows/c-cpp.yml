@@ -6,25 +6,17 @@ on:
       - main
 
 jobs:
-  build-upload:
+  build:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout Code
-      uses: actions/checkout@v3
-
-    - name: Setup Arduino CLI
-      run: |
-        curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | sh
-        echo "Adding Arduino CLI to PATH"
-        echo "$(pwd)/bin" >> $GITHUB_PATH
-        arduino-cli config init
-        arduino-cli core update-index
-        arduino-cli core install esp32:esp32
-
-    - name: Compile Sketch
-      run: arduino-cli compile --fqbn esp32:esp32:esp32 ./path-to-your-sketch.ino
-
-    - name: Upload Firmware
-      if: github.event_name == 'push'
-      run: arduino-cli upload --fqbn esp32:esp32:esp32 --port /dev/ttyUSB0 ./path-to-your-sketch.ino
+    - name: Checkout repo
+      uses: actions/checkout@v4
+      with:
+        submodules: 'recursive'
+    - name: esp-idf build
+      uses: espressif/esp-idf-ci-action@v1
+      with:
+        esp_idf_version: v4.4
+        target: esp32s2
+        path: 'esp32-s2-hmi-devkit-1/examples/smart-panel'
